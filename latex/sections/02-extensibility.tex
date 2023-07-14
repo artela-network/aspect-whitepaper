@@ -1,0 +1,58 @@
+% sections/02-extensibility.tex
+
+\section{Extensibility of Blockchain}
+
+In this section, we describe the extensibility issues of blockchain and introduce a new way to address them. 
+
+Extensibility\cite{Article} is a measure of the ability to extend a system and the level of effort required to implement the extension for customized functionality. Blockchain extensibility~\cite{x} refers to the ability to support user-defined functionality either through a built-in blockchain implementation or through extension mechanisms that allow developers to craft applications beyond the original intent of the platform.
+
+Advancement is underway in the realm of blockchain extensibility. Bitcoin~\cite{x} implements a built-in distributed ledger that enables basic functionality with Bitcoin script. It marks the initial steps toward blockchain extensibility. Later, Ethereum~\cite{x} implements a built-in distributed state machine (EVM) that enables enriched functionality with stateful smart contracts. It marks a big step forward in blockchain extensibility for adding user-defined functionality at runtime. Since then, EVM-based smart contract blockchains have proliferated.
+
+However, the extensibility of EVM-based smart contract blockchains is still limited. In this section, we discuss the extensibility problems of smart contract blockchains, the ways to address them, and Artela's solution. Artela aims to maximize the extensibility of smart contract blockchains.
+
+\subsection{The Extensibility Problems of Smart Contract Blockchain}
+
+The Ethereum Virtual Machine (EVM) is a widely adopted execution environment for smart contracts, used across numerous blockchains. While the EVM is designed to be Turing-complete, blockchains relying on the EVM face challenges in supporting complex dApps with advanced functionality. There are three main limitations related to extensibility:
+
+\begin{enumerate}
+    \item \textbf{Limited functionality of smart contracts:} EVM programs are restricted from using loops and must terminate within a specified number of steps. As a result, translating intricate programs that include a large number of instructions and asynchronous tasks from one Turing-complete language into an equivalent EVM program can be a challenge. Developers have to minimize computation steps to avoid exceeding gas limits.
+    \item \textbf{Limited extensibility of EVM:} The precompiled smart contract is prohibited from being built at the user level, and its ownership is strictly controlled by the developers of the platform. The precompiled smart contract is enabled by EVM for on-chain program functionality, but it needs permission from the blockchain. EVM extensibility is limited for smart contract developers.
+    \item \textbf{Limited customization outside EVM:} The process of transactions outside EVM is statically pre-configured and cannot be customized. In addition to the state transition within EVM, outside the EVM, transactions undergo other processes including pre-execution validation, queuing, post-execution data indexing, and so on. These processes are pre-set and cannot be modified permissionlessly on generalized blockchains.
+\end{enumerate}
+
+If a dApp requires the implementation of advanced features on-chain but is restricted by the aforementioned issues, the developer may need to either construct an independent, application-specific blockchain or propose an Ethereum Improvement Proposal (EIP) and await its implementation, which is a lengthy process.
+
+\subsection{The Ways to Address Extensibility Problems}
+
+The key to addressing these problems lies in creating a robust execution environment that not only accelerates performance, facilitating the crafting of complex logic in smart contracts, but also supports customization of various other transaction lifecycle processes. Our research identifies two fundamental methods to achieve this goal: the Superior-VM approach and the Extension-based approach.
+
+\subsubsection{Superior-VM Approach: Developing an Enhanced Smart Contract VM}
+
+The concept of creating a new, faster virtual machine (VM) capable of implementing additional transaction processes is a widely accepted solution. Move, a new programming language, is used to implement custom transaction logic and smart contracts within the Libra protocol. Substrate's runtime enables users to define entire transaction processes, not just state transition functions.
+
+EVM, a full-fledged VM, encompasses a rich ecosystem comprising numerous developers, extensive tooling, middleware, and widely adopted dApps. Several major public chain networks, including Layer2, integrate EVM to provide a mature development experience for their users. In the future, the development of enhanced smart contract VMs may become essential, but this journey toward VM maturity will be a long and evolving process.
+
+\subsubsection{Extension-based Approach: Providing Support for Extensions alongside the Smart Contract VM}
+
+With this approach, one can write a specific type of program, or an 'extension,' which performs faster and enables more states than EVM smart contracts to execute complex tasks that EVM struggles with. For example, in Avalanche, stateful precompiled contracts are used to customize the execution environment for Subnet and can be invoked by its EVM smart contracts. These precompiled contracts operate at native speed and permit the use of additional libraries.
+
+By utilizing the extension-based approach, blockchains remain compatible with EVM or other existing smart contract VMs while enabling customization. It means that developers can build dApps with more advanced features on top of the existing smart contract ecosystem.
+
+\subsection{Our Solution: Native Extension and Aspect Programming}
+
+In the extension-based approach, the precompiled extension mode is currently widely adopted. However, the precompiled solution doesn’t support adding user-defined functionality at runtime, and it doesn't support customization outside EVM. As a result of these limitations, the precompiled solution is primarily employed at the system level to address specific issues rather than at the user level to tackle a wide range of problems (to support more possibilities of innovation).
+
+To address those limitations, we propose the implementation of programmable native extensions on the blockchain, which enables developers to develop, deploy, and utilize user-level extensions with the features of being more blockchain-native, dynamic, permissionless, local-scope, and generic.
+
+\begin{itemize}
+    \item \textbf{Blockchain-native:} Native extensions are programs that run fully on-chain, executed deterministically by all validators in the network.
+    \item \textbf{Dynamic:} Different from precompiled contracts, native extensions are dynamic programs that can be deployed onto the blockchain at runtime.
+    \item \textbf{Permissionless:} Users can define and deploy their own programs. The blockchain acts solely as the execution environment, without any restrictions or permissions imposed by a centralized authority.
+    \item \textbf{Local-scope:} Smart contracts locally activate native extensions, ensuring that the effects of native extensions are within the local scope in which they are activated, not the global scope.
+    \item \textbf{Generic:} Native extensions provide access to the entire blockchain state and runtime context, allowing developers to customize outside EVM and participate in controlling the transaction lifecycle to realize generic and versatile customization.
+\end{itemize}
+
+With the native extension, users can independently introduce system-level functionality to their dApp. These native extensions seamlessly collaborate with smart contracts, enhancing the overall functionality and potential of the dApp ecosystem. For example, users can develop a runtime protection native extension for their DeFi smart contract to counteract hacking attempts. This extension can monitor unexpected fund flows from the vault by accessing the entire call stack and tracking state changes during the transaction. Furthermore, users can deploy a native extension that incorporates a new curve algorithm to enhance their verification process, overcoming limitations imposed by fixed algorithms used by nodes.
+
+To implement native extensions on the blockchain, we present Aspect Programming, a programming model that facilitates the creation of native extensions on the blockchain. In the next section of this paper, we will provide a detailed introduction to Aspect Programming.
+
