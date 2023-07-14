@@ -1,0 +1,51 @@
+\section{New World With Aspect}
+
+\subsection{Aspect Enables New Application Feature}
+
+We list some of the possible features for dApp could build by Aspect Programming. Many of these are exciting and innovative directions currently being explored in the crypto world and require enhanced programmability to facilitate their implementation. 
+
+\begin{enumerate}
+  \item \textbf{Smart Contract Runtime Protection:} The current emphasis in DeFi security revolves around safeguarding smart contracts at the code level, employing measures such as OpenZeppelin's ReentrancyGuard to mitigate the risks associated with unintended reentrancy. In addition to these white-box security solutions, the Aspect-based black-box security solution offers a complementary approach, which is designed to protect the security of the protocol according to predefined rules to verify the final execution results, regardless of the specifics of the actual transactions. Key features of this solution include real-time monitoring of on-chain asset movements, proactive risk mitigation, analysis of runtime behavior to identify vulnerabilities, and ensuring the continuity of protocols by preventing catastrophic hacks and fund losses.
+  
+  \item \textbf{Intent Solver On-Chain:} Intent allows users to define desired outcomes (what they want), and solvers can figure out the specific route to achieve these outcomes for the user (how to get it). However, the current blockchain architecture only allows solvers to operate off-chain. Aspect enables the implementation of on-chain intent solver, enhancing the user experience in dApp. For example, a user can express, "I want to exchange X ETH for Y USDC", instead of specifying, "I want to execute the swap function from DEX that has this and that code", the Aspect-based intent solver calculates the real-time status of the DEX on-chain and triggers relevant smart contract operations to fulfill the user's intent. It enables users to customize personalized on-chain intent processing logic freely.
+  
+  \item \textbf{Just-in-time (JIT) Operation:} JIT operation is widely used in various scenarios, but its flexibility and timeliness are currently limited, as it can only rely on the submission of multiple transaction bundles in the off-chain memory pool. Aspect empowers users to execute logic on-chain and combine it with smart contracts in atomic transactions during the block lifecycle. This enables on-chain JIT operation huge potentiality, such as JIT liquidation, JIT LP management, and MEV-capturing AMM. Aspect brings fast, expressive DeFi innovation within one powerful architecture.
+  
+  \item \textbf{Native Event-Driven Action:} Native Event-driven action allows users to subscribe to real-time specific on-chain events (including token transfers, state changes, transaction completions, etc.) to trigger another related atomic task. It leverages Aspect to extend additional atomic sub-transactions after transaction execution and before transaction committing. For example, when a master non-fungible token (NFT) is transferred in a transaction, Aspect immediately transfers its associated slave NFTs based on their predefined binding rules. Native Event-driven can also be utilized for atomic asynchronous cross-chain message notifications, maintaining consistency between on-chain and off-chain states or other blockchain states. For example, by monitoring the status of NFTs on the blockchain network and triggering real-time calls to the IPFS network when specific conditions are met, Aspect ensures the final updates of NFT metadata.
+  
+  \item \textbf{OnChain MicroService:} Users can leverage Aspect to create public on-chain services on blockchain networks, fostering collective maintenance and governance by diverse users and organizations. The Aspect-based public on-chain service model drives the growth of the blockchain ecosystem by encouraging developer participation in shared maintenance and governance. This promotes resource sharing and collaborative innovation, adding value and unlocking possibilities within the realm of decentralized finance. Additionally, it reduces development barriers and advances the adoption and application of blockchain technology.
+  
+  \item \textbf{Fully OnChain Game:} Aspect empowers users to enhance the programmability of game equipment NFTs, providing a more versatile user experience. Users can upgrade game equipment with programmability by integrating Aspect with existing OnChain game smart contracts while preserving their current data structure and operational methods. This future-proof enhancement enables further innovation opportunities within the ecosystem. For example, Aspect enables the implementation of ERC-6551 functionality within the ERC-721 protocol, allowing users to add additional features and value to game equipment while ensuring compatibility with existing protocols.
+\end{enumerate}
+
+\subsection{Built-in Feature Layer for Decentralized Network}
+
+It's hard for dApp to fully leverage the potential of the underlying blockchain network, and due to its limited functionality, lots of dApp lack comprehensive on-chain features, such as runtime security protection, decentralized governance, and so on, which led to a large risk for user funds on it. The integration of additional features is crucial for dApps.
+
+Currently, users have to build off-chain components or import third-party networks for their protocol, such as the keeper network. Those additional features operate on separate networks and cannot form atomic transactions with the on-chain program, leading to new issues such as compromised security and governance complexities.
+
+Aspect introduces a built-in "Feature Layer" for the blockchain network without third-party networks. Aspect allows extend native capabilities of the base layer, which can be free-bound by any smart contract, such as native security protection, native keeper, native index, native automation, native Oracle, native off-chain synchronize, etc. The network with Aspect not only offers the execution environment for users but also offers an extensible feature layer for them. Users can effortlessly activate these native additional features for their protocols, eliminating the need for external networks or complex off-chain systems.
+
+A web3 world that is so smooth in protocol development and user experience has never been closer to us. Aspect will have the opportunity to unlock more innovations on the blockchain.
+
+\subsection{Boundless Network With Customization and Composability}
+
+Currently, if users have the requirement to implement customization on-chain, they have to build separate networks, like app-specific blockchain or app-specific layer2. They have to lose the native composability with other protocol cause of separation and relies on distant cross-chain interoperability.
+
+With Aspect Programming, users have the ability to achieve blockchain-native customization within a single public blockchain network. This breakthrough capability overcomes the drawbacks and limitations of smart contract dApps and app-specific chains by providing dApps with the unprecedented ability to achieve native-scale composability and system-level customization.
+
+The real boundless network will become true, and it is both scalable and extensible. User is free to expand anything they want without being concerned about the limitation of the underlay network.
+
+\subsection{Enable Modular Application Building}
+
+A development experience that closely resembles cloud-native applications is highly anticipated. Users will only need to focus on business logic, and other decentralized technical features will be completed by Aspect Market for users.
+
+Building in a modular manner is an important trend, which might improve the efficiency of dApp development and accelerate mass adoption of web3. Some protocols, like Celestia, enable the modular manner of building basic blockchain networks, while Aspect Programming enables the possibility of building applications in a modular manner.
+
+Aspect Programming supports users to apply the Separation of Concerns (SoC) principle in programming. SoC is a principle used in programming to separate an application into units, with minimal overlapping between the functions of the individual units. The SoC is achieved using modularization, encapsulation, and arrangement in software layers. An Aspect can crosscut the program's core concerns. For example, the security Aspect and the automation Aspect can serve many smart contracts.
+
+With Aspect Programming, users can implement the program's major features (business logic) on smart contracts and implement additional features on Aspect (or combine existing Aspects). By weaving them together, a complete dApp is produced.
+
+\subsection{New Decentralized Computer Architecture}
+
+The blockchain is a "decentralized computer" whose "main processor (CPU)" is a smart contract virtual machine. Aspect allows this decentralized computer to have its own "coprocessor", like GPU, to supplement the functionality of the main processor. It extends the existing dApp technology stack, and users only need to use Aspect to build additional works to achieve more functions without using other technology stacks to rebuild their dApps. It is a stepwise upgrade of the blockchain architecture because it is compatible with the current architecture. This also makes it possible to bring more and more software engineering best practices into blockchain development.

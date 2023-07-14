@@ -1,0 +1,107 @@
+\section*{Appendix A}
+
+\subsection*{1. Identifiers}
+\begin{align*}
+\text{World State of Accounts:} & \quad \sigma \\
+\text{Aspect:} & \quad A \\
+\text{World State of Aspects:} & \quad \varpi \\
+\text{Transaction:} & \quad T \\
+\text{Block:} & \quad B \\
+\text{Smart Contract STF:} & \quad \Upsilon \\
+\text{Aspect STF:} & \quad \Gamma \\
+    \text{Expanded Aspect STF:} & \quad \iota \\
+\text{Block-Level STF:} & \quad \Pi \\
+\text{Block Finalization Function:} & \quad \Omega \\
+\text{Join-Point:} & \quad J \\
+\text{Join-Point STF:} & \quad P \\
+\text{Join-Point Entry Point:} & \quad E \\
+\text{Aspect Runtime Context:} & \quad C \\
+    \text{Aspect Runtime Context Group:} & \quad c \\
+    \text{Aspect Runtime Context Group Key Pair:} & \quad p \\
+\text{System Call:} & \quad \psi \\
+\text{System Module:} & \quad M \\
+\text{Aspect Operations:} & \\
+    \quad \text{Destruction:} & \quad D \\
+    \quad \text{Configuration:} & \quad I \\
+    \quad \text{Upgrade:} & \quad U \\
+\text{Receipt:} & \quad R \\
+\text{Aspect Core Process:} & \quad H \\
+\text{Aspect Binding:} & \quad b \\
+\text{Aspect Authorization Process:} & \quad X \\
+\text{Not exist:} & \quad \varnothing \\
+\text{Gas cost:} & \quad g \\
+\end{align*}
+
+\subsection*{2. Definitions}
+\begin{align*}
+\text{Join-Point and Join-Point Entry Point:} & \\
+J & \equiv (J_i, E, C, \{ \ldots, \psi_m, \psi_n, \ldots \}) \\
+E & \equiv (E_n, E_i, E_o) \\
+\text{Runtime Context:} & \\
+C & \equiv (c_b, c_t, c_a, c_e) \\
+c & \equiv (p_1, p_2, \ldots) \\
+p & \equiv (p_k, p_v) \\
+\text{Aspect State:} & \\
+\varpi_{_A} & \equiv (A_v, A_c, A_{ga}, A_{sa}, A_j, A_b, A_p, A_s) \\
+\text{Aspect Code and Gas Cost:} & \\
+A_c & \equiv (\ldots \oplus W_m \oplus W_n \oplus \ldots) \oplus (\ldots \oplus \psi_m \oplus \psi_n \oplus \ldots) \\
+g_{_A} & \equiv (\ldots + g_{_{W_m}} + g_{_{W_n}} + \ldots) + (\ldots + g_{_{\psi_m}} + g_{_{\psi_n}} + \ldots) \\
+\end{align*}
+
+\subsection*{3. Evaluations}
+\begin{align*}
+\text{Aspect STF:} & \\
+\varpi_{t+1} & \equiv \Gamma(\varpi_t, T) \\
+\Gamma(\varpi, T) & \equiv \iota(\varpi_{_A}, \varpi_{_S}, C, \sigma) \\
+\text{Join-Point STF:} & \\
+P(\varpi, T) & \equiv \Gamma_{A_0}(\varpi, T) \oplus \Gamma_{A_1}(\varpi^{A_0}, T) \oplus \ldots \\
+(A_0, A_1, \ldots) & \equiv \Eta(T_t, \forall b) \\
+\text{Transaction STF:} & \\
+\text{Legacy Ethereum:} & \\
+\sigma_{t+1} & \equiv \Upsilon(\sigma_t, T) \\
+\text{With Aspect:} & \\
+(\sigma_{t+1}, \varpi_{t+1}) & \equiv \Upsilon'(\sigma_t, \varpi_t, T) \\
+\Upsilon'(\varpi, \sigma, T) & \equiv P_{j_0}(\varpi, T) \oplus P_{j_1}(\varpi^{J_0}, T) \oplus \ldots \oplus \Upsilon(\sigma, T) \oplus \ldots \oplus P_{j_n}(\varpi^{j_n-1}, T) \\
+\text{Block STF (JoinPoint + Smart contract):} & \\
+(\sigma_{t+1}) & \equiv \Pi(\sigma_t, B) \\
+B & \equiv (\ldots, (T_0, T_1, T_2, \ldots), \ldots) \\
+\Pi(\sigma, B) & \equiv \Omega(B, \Upsilon(\Upsilon(\sigma, T_0), T_1), \ldots) \\
+\text{System Module STF:} & \\
+\varpi_{M_{t+1}} & = \psi(\varpi_{M_t}, \psi_i) \\
+\text{Signature Verification Function:} & \\
+a & \equiv S(T) \\
+\end{align*}
+
+\subsection*{4. Aspect Operations \& Processes}
+\begin{align*}
+\text{Aspect Deployment:} & \\
+\varpi_{_A} & \equiv
+\begin{cases}
+(1, A_c, A_{ga}, A_{sa}, A_j, 0, A_p, 0) & \text{if } A_{sa} > 0 \text{ or } A_{ga} > 0 \\
+(1, A_c, S(T), S(T), A_j, 0, A_p, 0) & \text{otherwise}
+\end{cases} \\
+\text{Aspect Upgrade:} & \\
+\varpi_{{t+1}_A} & \equiv U(\varpi_{t_{_{A_c}}}, \varpi_{t_{_{A_v}}}, \varpi_{t_{_{A_j}}}, A_c, A_j) \\
+U(\varpi_{_{A_c}}, \varpi_{_{A_v}}, \varpi_{_{A_j}}, A_c, A_j) & \equiv ((\varpi_{_{A_c}} \oplus A_c), (\varpi_{_{A_v}} + 1), (\varpi_{_{A_j}} \oplus A_j)) \\
+\text{Aspect Configuration:} & \\
+\varpi_{_{A_{t+1}}} & \equiv \Iota(\varpi_{_{A_t}}, A_{ga}, A_{sa}, A_p) \\
+\text{Aspect Execution:} & \\
+\text{Triggered by Join-Points:} & \\
+(\varpi_{_{A_{t+1}}}, \varpi_{_{S_{t+1}}}, C_{t+1}) & \equiv \iota(\varpi_{_{A_{t}}}, \varpi_{_{S_{t}}}, C_{t}, \sigma_t) \\
+\text{Triggered by External Calls:} & \\
+(\varpi_{_{A_{t+1}}}, \varpi_{_{S_{t+1}}}) & \equiv \iota'(\varpi_{_{A_{t}}}, \varpi_{_{S_{t}}}, \sigma_{t}) \\
+\text{Aspect Destruction:} & \\
+D(A, \varpi_{_A}) & \equiv \varnothing \\
+\text{Aspect Operation Governance:} & \\
+O & \in (I, U, D) \\
+V(\varpi_{ga}, a) & \equiv
+\begin{cases}
+1 & \text{if } \varpi_{ga} = a \\
+0 & \text{otherwise}
+\end{cases} \\
+G(\varpi_{ga}, T) & \equiv V(\varpi_{ga}, S(T)) \oplus O \\
+\text{Aspect Context Verification:} & \\
+R_c & \equiv \text{keccak}(\text{keccak}(\text{keccak}(C_{a_0}), C_{a_1}), \ldots) \\
+R & \equiv (R_x, R_z, R_u, R_b, R_l, R_c) \\
+\text{Aspect Binding:} & \\
+\end{align*}
