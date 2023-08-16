@@ -1,8 +1,6 @@
 \section{Aspect-Boost}
 Aspect-Boost is an initial implementation of Aspect Programming on Artela, and it is a framework for any kind of blockchain to integrate to enable Aspect Programming on it. With Aspect-Boost, blockchain can support users to develop, deploy and execute Aspect on it. To integrate Aspect-Boost, blockchain nodes need to implement the adaptors of Aspect-Boots.
 
-\subsection{Overview}
-
 Aspect-Boots contains the following key components to boost the process of Aspect integration with different blockchains:
 
 \begin{figure}[h]
@@ -24,23 +22,6 @@ Aspect-Boots contains the following key components to boost the process of Aspec
   
   \item \textbf{Aspect SDK.} The Aspect SDK equips developers with a set of tools to build rich dApps using Aspects. It simplifies the process of incorporating Aspects into dApps and allows for more advanced and flexible applications.
 \end{itemize}
-
-\subsection{Aspect Core}
-
-The Aspect core operates as a precompiled system contract, crafted in native code, and acts as the critical module governing Aspect life cycles. We've chosen to implement the Aspect core as a smart contract for these primary reasons:
-
-\begin{itemize}
-  \item Simpler interaction with smart contracts and the underlying world state: The Aspect core's nature as a smart contract simplifies processes such as binding authorization checks. For instance, invoking the validation interface of the smart contract is a mandatory step, which is made more straightforward by treating Aspect core as a smart contract.
-  \item Compatibility with existing transaction data structure: Implementing Aspect core as a smart contract eliminates the need to create new types of transactions specifically for Aspect management. This ensures the interfaces are completely compatible with the current ones, providing seamless integration.
-\end{itemize}
-
-\textbf{Aspect Management.} The Aspect core oversees changes to the state that influence the state transition function of an Aspect. When executing such operations like deploy, upgrade, or destroy, It meticulously checks the ownership of the Aspect, validating the address of the operation initiator against that of the Aspect's governor. Only the governor of the Aspect is permitted to modify the behavior of the Aspect's state transition functions.
-
-The Aspect core meticulously manages alterations to the state that affect an Aspect's state transition function. It performs a careful assessment of the Aspect's ownership, cross-verifying the address of the operation initiator with the address of the Aspect's governor. It's critical to understand that only the governor of the Aspect has the authority to make modifications to the behavior of the Aspect's state transition functions.
-
-\textbf{Binding Relationship Management.} The binding relationships between Aspects and smart contracts are stored within the state of the Aspect core. Any changes to these binding relationships are reflected in the state of the Aspect core. When the blockchain receives a transaction, the Aspect core identifies the Aspects associated with the recipient's address (provided the recipient is a smart contract) and initiates the execution of the relevant join points.
-
-\textbf{Fee Settlement.} Aspects, not being typical blockchain account objects, require a settlement account to handle token transactions. The Aspect core manages this process, as Aspects can't directly modify the balance of the settlement account. The settlement account sets an allowance amount of tokens for a given Aspect's fee settlements, and the Aspect core ensures that fees are deducted only if there is sufficient allowance.
 
 \subsection{ArtWASM}
 
@@ -82,19 +63,7 @@ The WASM opcodes demand less computational power in contrast to EVM opcodes. EVM
 
 ArtWASM's built-in runtime pool has made these overheads negligible by caching the runtime instances in an LRU cache and reusing the instances when needed.
 
-\subsection{JPM Controller}
-
-The JPM Controller is a pivotal component in the Aspect Boost, serving as the central hub between the blockchain base layer and Aspects. One of its main roles is providing a join point adaptor, an interface designed for integration with various blockchain platforms. This adaptor offers a set of interfaces akin to the blockchain base layer, allowing Aspects to be triggered at the appropriate stages throughout the block and transaction lifecycle.
-
-Additionally, blockchains are required to implement a set of interfaces defined by the join point adaptor. This allows the join point controller to make system calls to the appropriate base layer modules, ensuring seamless interaction between the two layers.
-
-The join point Controller also plays a crucial role in Aspect runtime construction, taking responsibility for the assembly of the Aspect runtime instance. It injects the appropriate runtime context and host API functions into the Aspect runtime instance based on the specifications of different join points. This guarantees the correct execution of functions within the Aspect, thereby ensuring the system's successful operation.
-
-\subsection{System Modules}
-
-The Scheduler is a module designed to automate transaction submissions to the current block proposal. This functionality simplifies the production of on-chain automation, like automated price feeds, thereby lessening protocol dependence on off-chain networks and enhancing dApp decentralization. The Aspect system can schedule transactions in either the current or future blocks, enabling full automation of protocols with on-chain procedures. However, it's important to note that the execution of scheduled transactions is not guaranteed. In cases where the assigned block space is full, transactions may need to be rescheduled.
-
-\textbf{ArtEVM}
+\subsection{ArtEVM}
 
 ArtEVM is an enhanced version of EVM provided in Aspect-Boost. ArtEVM is able to track all the state variable changes when a smart contract is executing, which provides an overview of account states for Aspect. In the meantime, ArtEVM can execute smart contract calls in parallel, maximizing the execution performance.
 
@@ -113,21 +82,3 @@ By employing this pattern, the new instructions can systematically document stat
 ArtEVM is capable of executing EVM smart contract calls in parallel. Traditionally, the execution of transactions in EVM is sequential due to potential data conflicts. However, ArtEVM leverages techniques including multi-version state-trie and block STM algorithm to analyze potential dependencies and conflicts between transactions, enabling them to be processed simultaneously without conflict. By grouping non-conflicting transactions together and processing them in parallel, ArtEVM can significantly increase the throughput and efficiency of smart contract execution. This parallel execution capability of ArtEVM enables it to handle a greater volume of transactions, thus boosting the scalability of the blockchain network.
 
 ArtEVM is fully compatible with Ethereum's EVM. The state tracing feature can be toggled on or off by the compiler, providing developers with a choice: they can opt for a more cost-efficient smart contract or a more secure one.
-
-\subsection{Aspect SDK}
-
-The Aspect SDK is a comprehensive toolkit that empowers developers to build sophisticated, dynamic decentralized applications (dApps) using Aspects. The SDK currently provides the following tools to streamline the integration of Aspects into dApps.
-
-\begin{itemize}
-  \item \textbf{RPC Client:} This tool allows developers to manage and interact with Aspects through code snippets. Since native blockchain platforms do not directly support Aspect operations, the RPC Client provides a set of interfaces related to Aspect management, mirroring those provided by the RPC Server.
-  
-  \item \textbf{Aspect Tool:} This command-line tool manages the entire lifecycle of Aspect development. It assists developers from creating an Aspect project to publishing, covering every stage of the Aspect development lifecycle.
-  
-  \item \textbf{Aspect Lib:} This collection of WASM libraries provides the basic Aspects. It includes a variety of components such as cryptographic libraries (e.g., hashing and signature verification), utility libraries (e.g., format conversions and encoding/decoding tools), and host API libraries (enabling system calls to system modules within the Aspect framework), among others.
-  
-  \item \textbf{ArtSOLC:} An enhanced Solidity compiler (SOLC) version, ArtSOLC can instrument state and call stack tracing code into EVM bytecode. This makes it possible to monitor state and call stacks in Aspects, further expanding the capabilities of Aspects in the context of dApps.
-\end{itemize}
-
-\subsection{RPC Server}
-
-The RPC Server is an essential component in the Aspect framework, providing a set of interfaces compatible with existing blockchain platforms for processing Aspect-related operations. The RPC Server is responsible for handling all Aspect-related requests, such as deploying an Aspect, binding an Aspect to a smart contract, unbinding, upgrading, and others. It translates these operations into a compatible format that can be processed by the underlying blockchain base layer.
