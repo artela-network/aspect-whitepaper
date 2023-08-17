@@ -111,7 +111,7 @@ With an exhaustive examination of 6,000 contemporary Ethereum blocks, the averag
 
 From the Figure 5 (the second test), we can observe that when context switch time is 32, the execution time is about the same as a single EVM call. Which means if we modularize the dApp and migrate the logics from smart contract to Aspect, it is recommanded that the number of join-points used to be less than 32.
 
-The last test emphasizes that, given the pronounced performance chasm between EVM and ArtWASM, the convergence point of the trajectories is at 36 join-points. This implies that for a transaction execution window of 1ms, the upper bound for join-points stands at 36.
+The last test emphasizes that, given the pronounced performance chasm between EVM and ArtWASM, the convergence point of the trajectories is at 33 join-points. This implies that for a transaction execution window of 1ms, the upper bound for join-points stands at 33.
 
 The gleaned insights coalesce into several pivotal conclusions:
 
