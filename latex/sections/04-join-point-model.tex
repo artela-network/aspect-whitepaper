@@ -131,7 +131,7 @@ Figure \ref{fig:join_point_layout}  shows a list of join points that might be im
     on\_block\_initialize & Activated prior to the preparation of the block proposal. Automated transaction is allowed to be inserted at this point. \\[20pt]
     on\_tx\_verify & Triggered following the transaction signature verification. The Aspect can introduce a customized transaction verification process, which takes precedence over the built-in process. \\[30pt]
     pre\_tx\_execute & Triggered prior to the transaction execution. At this stage, the account state remains pristine, allowing Aspect to preload information as necessary. \\[30pt]
-    pre\_contract\_call & Triggered before the execution of the cross-contract call. At this stage, the state of the callee remains unaltered, providing the Aspect with an opportunity to preload any necessary information. \\[30pt]
+    pre\_contract\_call & Triggered before the execution of the cross-contract call. For example, during a TX execution, Uniswap contract calls into Maker contract, the Aspect will be executed. \\[30pt]
     post\_contract\_call & Triggered after the cross-contract call is executed. The Aspect can then inspect the post-call state of the contract and make subsequent execution decisions. \\[30pt]
     post\_tx\_execute & Activated once the transaction has been executed and the account states have been finalized. Subsequently, Aspect can conduct a comprehensive review of the final execution state. \\[30pt]
     on\_tx\_committed & Triggered after the transaction has been finalized, and the modified states induced by the transaction have already been flushed into the state database. At this stage, Aspect can conduct post-processing activities, such as initiating an asynchronous task that can be executed in a future block. \\[60pt]
@@ -147,8 +147,13 @@ Notably, the join point delivers an abstract definition, permitting implementati
 The runtime context $C$ provides Aspects with information on transaction and block processing, including information such as modified states of smart contracts, emitted events, and raw data fields of the transaction. Formally: 
 
 $$
-C \equiv (c_b, c_t, c_a, c_e) \\ 
-c \equiv (p_1, p_2,...) \\ p \equiv (p_{k}, p_{v})
+C \equiv (c_b, c_t, c_a, c_e)
+$$
+$$
+c \equiv (p_1, p_2,...)
+$$
+$$
+p \equiv (p_{k}, p_{v})
 $$
 
 The context is structured as a collection of key-value pairs (formally, $p$), and when an Aspect requests a specific key (formally, $p_k$), the node will provide the most recent corresponding value (formally, $p_v$) at that point of processing. For instance, a $p_k$ `tx.origin.nonce` represents the nonce field’s value in the original transaction. Within the same $B$, It is essential that at a given $J$ for a specific $T$, all nodes in the blockchain network return the same $p_v$ for that $p_k$. This ensures the consistency of $c$, thereby aligning with the consensus mechanism. Each join point defines a specific group of $p$ that are accessible for an Aspect run on it.
@@ -247,8 +252,6 @@ U(\varpi{_{_{A_c}}},\varpi{_{_{A_v}}},\varpi{_{_{A_j}}},A_c,A_j) \equiv ((\varpi
 \]
 
 The upgrade process is captured by the upgrade function $U$ which takes the current code store of the Aspect ($\varpi{_{_{A_c}}}$), current Aspect version $\varpi{_{_{A_v}}}$ , join points of current Aspect ($\varpi{_{_{A_j}}}$), new Aspect byte code ($A_c$), and new Aspect join points ($A_j$) as inputs. The code store $\varpi{_{_{A_c}}}$ and join point store $\varpi{_{_{A_j}}}$ maintain all versions of Aspect code and corresponding join points. During the upgrade process, $A_c$ and $A_j$ will be added to $\varpi{_{_{A_c}}}$ and $\varpi{_{_{A_j}}}$ with $\varpi{_{_{A_v}}} + 1$ as their key. It's important to note that smart contracts can bind to the same Aspect across different versions. This is why both $\varpi{_{_{A_c}}}$ and $\varpi{_{_{A_j}}}$ are designed to support multi-version storage. In this way, the system ensures backward compatibility while still allowing for necessary upgrades and modifications.
-
-We will discuss the specifics of upgrade authority within the governance section.
 
 \textbf{Configuration.} The configuration can be activated at any time after deployment, and there is no limit to the number of times. The configuration process facilitates updates to the governance account $A_{ga}$, the settlement account $A_{sa}$, and various properties $A_p$. However, these configuration modifications will not come into play until the subsequent block. The state transition Aspect 
 
@@ -359,30 +362,10 @@ Once this bond is conclusively formed, the underlying protocol of the Aspect can
 We design efficient, secure, and extension-style programming features for Aspect and support Aspect to act as an extended role in the blockchain. Those features include:
 
 \begin{itemize}
-  \item \textbf{Native Governance:} Aspect supports native governance, which means changes to Aspect's code, properties, and so on must be accomplished through system procedures defined by Aspect itself. During programming, crucial runtime parameters of the protocol can be placed in properties, such as those requiring governance like pausing the protocol or adjusting fees. Hence, value modifications can be directly completed by initiating governance via system procedures, eliminating the need for additional governance-related coding and external audits. Only the government accounts of the Aspect have the authority to operate these system procedures. Governance accounts can be extended into rich governance architecture through methods like CA, AA, etc. 
-  \item \textbf{In-memory State:} To minimize the cost of state loading during execution, developers may opt to cache specific storage states in memory, particularly when the number of read operations significantly surpasses the number of write operations. To ensure that the use of an in-memory state meets the requirements of deterministic execution, as well as providing efficiency and lower costs than the state storage, its underlying implementation still encapsulates the state storage. The intermediate layer offers functionalities resembling those of memory.
-  \item \textbf{Semantic-rich Transaction:} Aspect leverages runtime context to supplement the semantics of a transaction. For instance, a cryptographic Aspect authenticates the multi-party signature within a transaction prior to an EVM call and stores the verification result in the context. During transaction execution in EVM, the smart contract is able to reference this signature verification result, thus eliminating the need for independent verification. Thereby, by Aspect Programming, we are able to design a semantic-rich transaction. Both Aspects and smart contracts can utilize these semantics in runtime contexts to facilitate message exchanges.
   \item \textbf{Context Exchange:} In Aspect, communication occurs through the exchange of context. This communication can take place between different Aspects or between an Aspect and a smart contract. One such scenario might involve a previous Aspect writing the KYC (Know Your Customer) flag into a transaction, which a subsequent Aspect can then read to determine its own actions.
+  \item \textbf{Semantic-rich Transaction:} Aspect leverages runtime context to supplement the semantics of a transaction. For instance, a cryptographic Aspect authenticates the multi-party signature within a transaction prior to an EVM call and stores the verification result in the context. During transaction execution in EVM, the smart contract is able to reference this signature verification result, thus eliminating the need for independent verification. Thereby, by Aspect Programming, we are able to design a semantic-rich transaction. Both Aspects and smart contracts can utilize these semantics in runtime contexts to facilitate message exchanges.
+  \item \textbf{Native Governance:} Aspect supports native governance, which means changes to Aspect's code, properties, and so on must be accomplished through system procedures defined by Aspect itself. During programming, crucial runtime parameters of the protocol can be placed in properties, such as those requiring governance like pausing the protocol or adjusting fees. Hence, value modifications can be directly completed by initiating governance via system procedures, eliminating the need for additional governance-related coding and external audits.  
 \end{itemize}
-
-\subsubsection{Context layout}
-
-Runtime context of Aspect refers to the information that Aspect can use and transmit during its execution. Runtime context is composed of two parts: join point contexts and Aspect context.
-
-\textbf{Join point contexts.} Different join points have access to various contexts. These contexts include:
-
-\begin{itemize}
-  \item \textbf{Block Contexts:} This context, which is based on current blockchain data, is accessible at all join points. It allows for queries regarding block height, as well as calls to smart contracts, among other things.
-  \item \textbf{Transaction Contexts:} This context refers to the current transaction state, and it is only available at transaction-related join points. The transaction context is composed of two major parts:
-    \begin{itemize}
-      \item The static part provides transaction-related data such as transaction hash, transaction sender, and so on.
-      \item The information generated when processing the transaction such as signature verification result, smart contract call stack, and world state changes.
-    \end{itemize}
-\end{itemize}
-
-\textbf{Aspect contexts.} Aspect context refers to an in-memory data object that can be shared among Aspects. Each Aspect has its own designated data area within the Aspect context isolated by the namespace, where only the owner Aspect has the write permissions, while others retain read-only access. Aspects can use this context to transmit messages based on a mutually agreed protocol. 
-
-\textbf{Environment contexts.} Environment context contains the overall chain environment information, including chain id, current fork, and so on.
 
 \subsubsection{Verification}
 
