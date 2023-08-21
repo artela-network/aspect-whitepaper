@@ -62,7 +62,7 @@ The experimental context was articulated as follows:
 Three distinctive tests were designed to uncover the interplay between join point count and performance:
 
 \begin{enumerate}
-  \item The first test, displayed in the Figure \ref{fig:image1}, no Fibonacci computation executed during the test, with progressively augmented the count of join-points, we can find out the pure context switch cost of both ArtWASM and EVM.
+  \item The first test, displayed in the Figure \ref{fig:image1}, no Fibonacci computation executed during the test, with progressively augmented the count of join points, we can find out the pure context switch cost of both ArtWASM and EVM.
   \item The second test, displayed in the Figure \ref{fig:image2}, constrained context switch times to 1, while increasing Fibonacci computation times. This aimed at identify the performance differences between ArtWASM and EVM.
   \item The last test, displayed in the Figure \ref{fig:image3}, established 1 millisecond execution time limit, and progressively increasing join point count. This test aimed to reveal the computational headroom that ArtWASM holds over EVM.
 \end{enumerate}
@@ -89,7 +89,7 @@ Three distinctive tests were designed to uncover the interplay between join poin
   \end{minipage}
 \end{figure}
 
-From the test shown in Figure \ref{fig:image1}, it can be concluded that the context switch overhead for ArtWASM is 29 microseconds, whereas for EVM it is 18 microseconds. The context switch overhead of ArtWASM is 1.61 times that of EVM in terms of performance. However, from the test result in figure \ref{fig:image2}, the execution performance of ArtWASM surpasses that of EVM by a factor of 666.54.
+From the test shown in Figure \ref{fig:image1}, it can be concluded that the context switch overhead for ArtWASM is 29 microseconds, whereas for EVM it is 18 microseconds. The context switch overhead of ArtWASM is 1.61 times that of EVM in terms of performance. However, from the test result in Figure \ref{fig:image2}, the execution performance of ArtWASM surpasses that of EVM by a factor of 666.54.
 
 The last test shown in Figure \ref{fig:image3} emphasizes that, when the execution time is fixed, the higher the number of join points, the greater the proportion of context switch overhead, and the less time available for actual computation. When the number of join points reaches 33, there will be no time left for execution.
 
@@ -119,4 +119,4 @@ It is recommanded to adjust the Aspect execution latency dynamically for the giv
   \item The residual 20\% is allocated for execution.
 \end{enumerate}
 
-Leveraging the aforementioned postulates and empirical findings, and with Ethereum's average transaction latency\footnote{We have collected the average gas cost of Ethereum in August 2023, which is about 280000 wei (almost the same as the execute cost of Fibonacci(1600) - 282250 wei). The execution time of completing Fibonacci(1600) with EVM is about 1014 microseconds.} as our baseline, our assumptions suggest that up to 15 join-points can be executed per transaction, heralding a monumental 13155.8\% surge in execution performance for the system. This is just a theoretical assumption specifically for Artela, and the actual number of join-points should be adjusted according to the actual blockchain platform.
+Leveraging the aforementioned findings, and with Ethereum's average transaction latency\footnote{We have collected the average gas cost of Ethereum in August 2023, which is about 280000 wei (almost the same as the execute cost of Fibonacci(1600) - 282250 wei). The execution time of completing Fibonacci(1600) with EVM is about 1014 microseconds.} as our baseline, our assumptions suggest that up to 15 join points can be executed per transaction, along with 13155.8\% surge in execution performance for the system. This is just a theoretical assumption specifically for Artela, and the actual number of join points should be adjusted according to the actual blockchain platform.
