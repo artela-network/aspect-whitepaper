@@ -36,7 +36,7 @@ class SecurityAspect extends Aspect {
 }
 \end{verbatim}
 
-In this example, the \texttt{postTxExecute} method serves as an entry point for the join point, which is triggered once the Ethereum Virtual Machine (EVM) completes transaction execution. The method is decorated with the \texttt{@joinpoint} annotation to indicate that it should be registered as a join point.
+In this example, the \texttt{postTxExecute} method serves as an entry point for the join point, which is triggered once the EVM completes transaction execution. The method is decorated with the \texttt{@joinpoint} annotation to indicate that it should be registered as a join point.
 
 The \texttt{JPContext} object represents the runtime context and provides information about the original transaction, transaction runtime details at the current process point, and APIs for controlling transaction behavior. It is passed as a parameter to the join point method, enabling interaction with the transaction.
 
@@ -52,7 +52,7 @@ Once the deployment and binding transactions are successfully processed, the Asp
 \subsection{Execution with Aspect}
 When a transaction is initiated on a smart contract, the Aspect Programming framework runtime is activated. As the transaction begins execution, the Aspect runtime evaluates each join point to determine if there are any bound Aspects associated with the invoked smart contract. If an Aspect is bound to a join point, it is triggered upon the completion of the transaction execution.
 
-To execute an Aspect, the Aspect runtime retrieves its bytecode from the blockchain's world state and loads it into a WebAssembly (Wasm) runtime environment. A context object is then constructed, providing relevant information about the transaction and the execution environment. Finally, the Aspect runtime invokes the entry function of the Aspect, triggering the execution of the Aspect's logic.
+To execute an Aspect, the Aspect runtime retrieves its bytecode from the blockchain's world state and loads it into a WebAssembly (Wasm)\cite{webassembly} runtime environment. A context object is then constructed, providing relevant information about the transaction and the execution environment. Finally, the Aspect runtime invokes the entry function of the Aspect, triggering the execution of the Aspect's logic.
 
 For example, suppose the smart contract's \texttt{withdraw} function contains logic that ensures the transferred funds always exceed the amount specified in the function parameter. If an Aspect is bound to the \texttt{postTxExecute} join point, it will be triggered at the completion of the transaction execution. The Aspect runtime retrieves the Aspect's bytecode, loads it into the Wasm runtime, constructs a context object, and invokes the Aspect's entry function. If the Aspect identifies a discrepancy between the expected and actual funds transfer, it can set a revert flag via the join point context. Upon detecting this flag, the Aspect runtime reverses the transaction, labels the result as a failure, and provides a rationale specifying that the transaction was overturned by the bound Aspect.
 

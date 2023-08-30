@@ -1,4 +1,12 @@
-\backcite {Article}{{3}{2}{section.2}}
-\backcite {x}{{3}{2}{section.2}}
-\backcite {x}{{3}{2}{section.2}}
-\backcite {x}{{3}{2}{section.2}}
+\backcite {artela2023}{{1}{(document)}{Doc-Start}}
+\backcite {wood2014ethereum}{{1}{(document)}{Doc-Start}}
+\backcite {johansson2009designing}{{3}{2}{section.2}}
+\backcite {garriga2021blockchain}{{3}{2}{section.2}}
+\backcite {nakamoto2008bitcoin}{{3}{2}{section.2}}
+\backcite {buterin2014next}{{3}{2}{section.2}}
+\backcite {blackshear2019move}{{4}{2.2.1}{subsubsection.2.2.1}}
+\backcite {web3foundation2020}{{4}{2.2.1}{subsubsection.2.2.1}}
+\backcite {avalanchewhitepaper}{{4}{2.2.2}{subsubsection.2.2.2}}
+\backcite {avalanchewhitepaper}{{4}{2.2.2}{subsubsection.2.2.2}}
+\backcite {webassembly}{{7}{3.3}{subsection.3.3}}
+\backcite {wood2014ethereum}{{8}{4}{section.4}}

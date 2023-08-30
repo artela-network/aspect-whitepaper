@@ -4,15 +4,15 @@
 
 In this section, we describe the extensibility issues of blockchain and introduce a new way to address them. 
 
-Extensibility\cite{Article} is a measure of the ability to extend a system and the level of effort required to implement the extension for customized functionality. Blockchain extensibility~\cite{x} refers to the ability to support user-defined functionality either through a built-in blockchain implementation or through extension mechanisms that allow developers to craft applications beyond the original intent of the platform.
+Extensibility\cite{johansson2009designing} is a measure of the ability to extend a system and the level of effort required to implement the extension for customized functionality. Blockchain extensibility\cite{garriga2021blockchain} refers to the ability to support user-defined functionality either through a built-in blockchain implementation or through extension mechanisms that allow developers to craft applications beyond the original intent of the platform.
 
-Advancement is underway in the realm of blockchain extensibility. Bitcoin~\cite{x} implements a built-in distributed ledger that enables basic functionality with Bitcoin script. It marks the initial steps toward blockchain extensibility. Later, Ethereum~\cite{x} implements a built-in distributed state machine (EVM) that enables enriched functionality with stateful smart contracts. It marks a big step forward in blockchain extensibility for adding user-defined functionality at runtime. Since then, EVM-based smart contract blockchains have proliferated.
+Advancement is underway in the realm of blockchain extensibility. Bitcoin\cite{nakamoto2008bitcoin} implements a built-in distributed ledger that enables basic functionality with Bitcoin script. It marks the initial steps toward blockchain extensibility. Later, Ethereum\cite{buterin2014next} implements a built-in distributed state machine (EVM) that enables enriched functionality with stateful smart contracts. It marks a big step forward in blockchain extensibility for adding user-defined functionality at runtime. Since then, EVM-based smart contract blockchains have proliferated.
 
 However, the extensibility of EVM-based smart contract blockchains is still limited. In this section, we discuss the extensibility problems of smart contract blockchains, the ways to address them, and Artela's solution. Artela aims to maximize the extensibility of smart contract blockchains.
 
 \subsection{The Extensibility Problems of Smart Contract Blockchain}
 
-The Ethereum Virtual Machine (EVM) is a widely adopted execution environment for smart contracts, used across numerous blockchains. While the EVM is designed to be Turing-complete, blockchains relying on the EVM face challenges in supporting complex dApps with advanced functionality. There are three main limitations related to extensibility:
+The EVM is a widely adopted execution environment for smart contracts, used across numerous blockchains. While the EVM is designed to be Turing-complete, blockchains relying on the EVM face challenges in supporting complex dApps with advanced functionality. There are three main limitations related to extensibility:
 
 \begin{enumerate}
     \item \textbf{Limited functionality of smart contracts:} EVM programs are restricted from using loops and must terminate within a specified number of steps. As a result, translating intricate programs that include a large number of instructions and asynchronous tasks from one Turing-complete language into an equivalent EVM program can be a challenge. Developers have to minimize computation steps to avoid exceeding gas limits.
@@ -28,13 +28,13 @@ The key to addressing these problems lies in creating a robust execution environ
 
 \subsubsection{Replace EVM with a superior VM}
 
-The concept of creating a new, faster virtual machine (VM) capable of implementing additional transaction processes is a widely accepted solution. MoveVM enables users to add scripts throughout transactions in a much safer environment. Substrate's runtime enables users to define entire transaction processes, not just state transition functions.
+The concept of creating a new, faster virtual machine (VM) capable of implementing additional transaction processes is a widely accepted solution. MoveVM\cite{blackshear2019move} enables users to add scripts throughout transactions in a much safer environment. Substrate's runtime\cite{web3foundation2020} enables users to define entire transaction processes, not just state transition functions.
 
 EVM, a full-fledged VM, encompasses a rich ecosystem comprising numerous developers, extensive tooling, middleware, and widely adopted dApps. Several major public chain networks, including Layer2, integrate EVM to provide a mature development experience for their users. Developing enhanced smart contract VMs may become essential in the future, but this journey toward the same level of maturity and popularity as the EVM will be a long and evolving process.
 
 \subsubsection{Enhance EVM with a complementary “extension”}
 
-This approach involves introducing a new stack to enhance the EVM with an “extension.” This extension module performs faster and enables more states than EVM smart contracts to execute complex tasks that EVM struggles. For example, in Avalanche, stateful precompiled contracts are used to customize the execution environment for Subnet and can be invoked by its EVM smart contracts. These precompiled contracts operate at native speed and permit additional libraries.
+This approach involves introducing a new stack to enhance the EVM with an “extension.” This extension module performs faster and enables more states than EVM smart contracts to execute complex tasks that EVM struggles. For example, in Avalanche\cite{avalanchewhitepaper}, stateful precompiled contracts are used to customize the execution environment for Subnet\cite{avalanchewhitepaper} and can be invoked by its EVM smart contracts. These precompiled contracts operate at native speed and permit additional libraries.
 
 The goal is to push the boundaries of the EVM’s capabilities beyond its original specification, while still maintaining EVM-equivalence. This approach enhances dApp functionalities on top of the existing EVM infrastructure.
 
