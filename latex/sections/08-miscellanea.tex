@@ -17,7 +17,7 @@ The experimental context was articulated as follows:
   \item To preserve the experiment's integrity, both Solidity and Assembly Script were devoid of optimizations, with Aspect's code strictly compiled under the -O0 flag. A thorough validation of the ensuing .wat file ensured an absence of compiler-infused enhancements.
 \end{enumerate}
 
-Three distinctive tests were designed to uncover the interplay between join point count and performance:
+Three distinctive tests\footnote{All tests were conducted using native number representations: 64-bit integers in WASM and 256-bit integers in EVM.} were designed to uncover the interplay between join point count and performance:
 
 \begin{enumerate}
   \item The first test, displayed in the Figure \ref{fig:image1}, no Fibonacci computation executed during the test, with progressively augmented the count of join points, we can find out the pure context switch cost of both ArtWASM and EVM.
