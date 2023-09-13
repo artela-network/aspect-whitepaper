@@ -28,7 +28,7 @@
 \text{Aspect Core Process:} & \quad H \\
 \text{Aspect Binding:} & \quad b \\
 \text{Aspect Authorization Process:} & \quad X \\
-\text{Not exist:} & \quad \varnothing \\
+\text{Not exist:} & \quad \emptyset \\
 \text{Gas cost:} & \quad g \\
 \end{align*}
 
@@ -91,7 +91,7 @@ U(\varpi_{_{A_c}}, \varpi_{_{A_v}}, \varpi_{_{A_j}}, A_c, A_j) & \equiv ((\varpi
 \text{Triggered by External Calls:} & \\
 (\varpi_{_{A_{t+1}}}, \varpi_{_{S_{t+1}}}) & \equiv \iota'(\varpi_{_{A_{t}}}, \varpi_{_{S_{t}}}, \sigma_{t}) \\
 \text{Aspect Destruction:} & \\
-D(A, \varpi_{_A}) & \equiv \varnothing \\
+D(A, \varpi_{_A}) & \equiv \emptyset \\
 \text{Aspect Operation Governance:} & \\
 O & \in (I, U, D) \\
 V(\varpi_{ga}, a) & \equiv
@@ -104,4 +104,9 @@ G(\varpi_{ga}, T) & \equiv V(\varpi_{ga}, S(T)) \oplus O \\
 R_c & \equiv \text{keccak}(\text{keccak}(\text{keccak}(C_{a_0}), C_{a_1}), \ldots) \\
 R & \equiv (R_x, R_z, R_u, R_b, R_l, R_c) \\
 \text{Aspect Binding:} & \\
+(...,A_m, A_n,...) & \equiv \Eta(a_{sc}, \forall b)\\ 
+b & \equiv (a_{sc},A_i, A_v, A_p) \\
+f(b) & \equiv X(A_i) \oplus F(A_i, A_v,a_{sc},b_p) \\
+X(A_i) & \equiv
+\left\{\begin{array}{l}1\;\\0\end{array}\left.\begin{array}{r}if\;\text{id of A is authorized}\\otherwise\end{array}\right\}\right.\\
 \end{align*}

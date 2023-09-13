@@ -1,6 +1,83 @@
-\usepackage{graphicx}
-
 \section{Miscellanea}
+
+\subsection{Execution Latency Analysis}
+
+In this section, we present an analysis based on a set of benchmarks that compares the execution and context switch delays between EVM and ArtWASM. The test results yield a conclusion: integrating Aspect for supplementary computations during transaction execution can yield substantial benefits under certain conditions. For instance, increasing the transaction execution latency by 65\% for Aspect execution can result in a significant growth of 2 orders of magnitude comparing with EVM computational throughput.
+
+\subsubsection{Benchmarking}
+
+To rigorously appraise the execution overhead associated with Aspect, and to fine-tune the balance between the computational potentials of EVM and ArtWASM, a meticulous sequence of tests were anchored around the Fibonacci algorithm.
+
+The experimental context was articulated as follows:
+
+\begin{enumerate}
+  \item ArtWASM's runtime, implemented in Go 1.21, employs WASMTime v11.0.0 as its underlying execution engine.
+  \item The testing was facilitated on a machine powered by a 2.2 GHz Haswell CPU.
+  \item The referential smart contract was constructed using Solidity version 0.8.20, setting it in contrast with the Aspect test code, implemented in Assembly Script 0.27.5.
+  \item To preserve the experiment's integrity, both Solidity and Assembly Script were devoid of optimizations, with Aspect's code strictly compiled under the -O0 flag. A thorough validation of the ensuing .wat file ensured an absence of compiler-infused enhancements.
+\end{enumerate}
+
+Three distinctive tests\footnote{All tests were conducted using native number representations: 64-bit integers in WASM and 256-bit integers in EVM.} were designed to uncover the interplay between join point count and performance:
+
+\begin{enumerate}
+  \item The first test, displayed in the Figure \ref{fig:image1}, no Fibonacci computation executed during the test, with progressively augmented the count of join points, we can find out the pure context switch cost of both ArtWASM and EVM.
+  \item The second test, displayed in the Figure \ref{fig:image2}, constrained context switch times to 1, while increasing Fibonacci computation times. This aimed at identify the orders-of-magnitude differences in terms of computational capabilities between ArtWASM and EVM.
+  \item The last test, displayed in the Figure \ref{fig:image3}, established 1 millisecond execution time limit, and progressively increasing join point count. This test aimed to reveal the computational headroom that ArtWASM holds over EVM.
+\end{enumerate}
+
+\begin{figure}[htp]
+  \centering
+  \begin{minipage}{0.3\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{sections/et-vs-cst.png}
+    \caption{Context Switch Overheads of ArtWASM and EVM}
+    \label{fig:image1}
+  \end{minipage}\hfill
+  \begin{minipage}{0.3\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{sections/et-vs-ca.png}
+    \caption{Computational Capabilities Differences of ArtWASM and EVM}
+    \label{fig:image2}
+  \end{minipage}\hfill
+  \begin{minipage}{0.3\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{sections/tx-latency-na-vs-jpc.png}
+    \caption{Performance Delineation of ArtWASM and EVM}
+    \label{fig:image3}
+  \end{minipage}
+\end{figure}
+
+From the test shown in Figure \ref{fig:image1}, it can be concluded that the context switch overhead for ArtWASM is 29 microseconds, whereas for EVM it is 18 microseconds. The context switch overhead of ArtWASM is 1.61 times that of EVM in terms of performance. However, from the test result in Figure \ref{fig:image2}, ArtWASM's performance outstrips EVM by 2 to 3 orders of magnitude (this number might be different with other algorithms, for here we just use Fibonacci as an example).
+
+The last test shown in Figure \ref{fig:image3} emphasizes that, when the execution time is fixed, the higher the number of join points, the greater the proportion of context switch overhead, and the less time available for actual computation. When the number of join points reaches 33, there will be no time left for execution.
+
+\subsubsection{conclusions}
+The gleaned insights coalesce into several pivotal conclusions:
+
+\begin{enumerate}
+  \item Context switches between join points induce more overhead than an EVM calls.
+  \item ArtWASM's computational performance is far better than that of the EVM.
+  \item To reduce the transaction latency, it is reasonable to nestle complex logic within Aspect, relegating simpler logic to the smart contract.
+  \item Pruning the number of join point harnessed yields performance efficiencies.
+\end{enumerate}
+
+Distilling the insights, we can encapsulate the dynamics in the equation:
+
+\[
+  \text{ExtraComputationCapacity} \equiv \frac{\text{AspectTotalTime} - 29 \times \text{JoinPointNumber} \times \text{ComputationalCapabilityRatio}}{\text{EVMExecutionLatency}}
+\]
+
+\pagebreak
+
+It is recommanded to adjust the Aspect execution latency dynamically for the given blockchain platform. For example, in harmony with prevailing usage patterns, we postulate:
+
+\begin{enumerate}
+  \item Aspect aims to accommodate transaction execution latencies with a moderate 65\% uptick.
+  \item Of this latency, 45\% is earmarked for context switching.
+  \item The residual 20\% is allocated for execution.
+\end{enumerate}
+
+Leveraging the aforementioned findings, and with Ethereum's average transaction latency\footnote{We have collected the average gas cost of Ethereum in August 2023, which is about 280000 wei (almost the same as the execute cost of Fibonacci(1600) - 282250 wei). The execution time of completing Fibonacci(1600) with EVM is about 1014 microseconds.} as our baseline, our assumptions suggest that up to 15 join points can be executed per transaction, along with approximately an extra 2 orders of magnitude surge in computational capabilities for the system. This is just a theoretical assumption specifically for Artela, and the actual number of join points should be adjusted according to the actual blockchain platform.
 
 \subsection{Heterogeneous Aspect}
 
@@ -42,98 +119,3 @@ The distinctions between Aspect and off-chain computation encompass:
 
 In conclusion, Aspect and off-chain computation can act as synergistic complements to each other, empowering both smart contracts and applications. However, due to its native extension features, Aspect possesses unique functionalities that off-chain computation cannot replicate.
 
-\subsection{About Latency Problem}
-
-Transactions executing both a smart contract and an Aspect may exhibit elevated latency in comparison to those executing a smart contract alone. It is critical to distinguish between the following two scenarios:
-
-\begin{enumerate}
-  \item \textbf{Embedding a specific logic in an Aspect for an existing smart contract.} In the absence of an Aspect, this particular logic could be executed within off-chain components, thus not contributing to increased on-chain latency. However, if we shift this logic from off-chain components to on-chain Aspects, the transaction latency would escalate.
-  \item \textbf{Implementing specific functionality via an EVM-based smart contract augmented by a WASM-based Aspect.} Were this specific functionality to be implemented exclusively by the EVM-based smart contract, transaction calls to this functionality would exhibit increased latency, as the WASM-based Aspect executes at a faster rate than the smart contract. In this scenario, the Aspect mitigates the latency.
-\end{enumerate}
-
-Despite these two scenarios seemingly contradicting each other, it is a fallacy to assume that Aspects inherently increase latency. The latency is predominantly determined by the transaction's gas limit. Given the same latency, transactions executed through an Aspect can utilize more gas.
-
-To rigorously appraise the execution overhead associated with Aspect, and to fine-tune the balance between the computational potentials of EVM and ArtWASM, a meticulous sequence of tests were anchored around the Fibonacci algorithm.
-
-The experimental context was articulated as follows:
-
-\begin{enumerate}
-  \item ArtWASM's runtime, crafted in Go 1.21, employs WASMTime v11.0.0 as its pivotal execution engine.
-  \item The testing was facilitated on a machine powered by a 2.2 GHz Haswell CPU.
-  \item The referential smart contract was sculpted using Solidity version 0.8.20, setting it in contrast with the Aspect test code, designed in Assembly Script 0.27.5.
-  \item To preserve the experiment's integrity, both Solidity and Assembly Script were devoid of optimizations, with Aspect's code strictly compiled under the -O0 flag. A thorough validation of the ensuing .wat file ensured an absence of compiler-infused enhancements.
-\end{enumerate}
-
-Three discerning tests were architected to identify the interplay between join-points and performance dynamics:
-
-\begin{enumerate}
-  \item The initial test, embodied in the leftmost figure, constrained join-points to 10, while sequentially amplifying Fibonacci iterations. This aimed at highlighting the juncture where Aspect's efficiency eclipses that of traditional smart contracts.
-  \item The next test, showcased in the central figure, spun 1600 Fibonacci iterations across both EVM and ArtWASM platforms, reiterated 100,000 times. This setup progressively augmented the count of join-points, enabling a nuanced correlation study between ArtWASM and EVM execution trajectories.
-  \item The final test, encapsulated in the rightmost figure, established an execution time ceiling (1 milli-second), and concurrently augmented join-points. This test endeavored to reveal the computational headroom ArtWASM holds over EVM.
-\end{enumerate}
-
-\begin{figure}[htp]
-  \centering
-  \begin{minipage}{0.3\textwidth}
-    \centering
-    \includegraphics[width=1\linewidth]{sections/tx-latency-et-vs-cc.png}
-    \caption{Equilibrium Analysis between Aspect and Smart Contract Computation}
-    \label{fig:image1}
-  \end{minipage}\hfill
-  \begin{minipage}{0.3\textwidth}
-    \centering
-    \includegraphics[width=1\linewidth]{sections/tx-latency-et-vs-jpc.png}
-    \caption{Performance Interrelation between ArtWASM and EVM}
-    \label{fig:image2}
-  \end{minipage}\hfill
-  \begin{minipage}{0.3\textwidth}
-    \centering
-    \includegraphics[width=1\linewidth]{sections/tx-latency-na-vs-jpc.png}
-    \caption{Performance Delineation of ArtWASM and EVM}
-    \label{fig:image3}
-  \end{minipage}
-\end{figure}
-
-Drawing insights from the data, we can sculpt equations detailing the execution costs for both ArtWASM and EVM:
-
-\[
-\text{ArtWASM Execution Total Time} \equiv 29.5 \times \text{Number of Join Points} + \text{Execution Time}
-\]
-\[
-\text{EVM Execution Total Time} \equiv 18.8 \times \text{Number of Calls} + \text{Execution Time}
-\]
-
-With an exhaustive examination of 6,000 contemporary Ethereum blocks, the average transactional gas consumption is around 280,079.07. Fascinatingly, this aligns with the gas demands of Fibonacci(1600), estimated at 280,255. Marrying this computational weight of Fibonacci(1600) with test data revealed a stark performance disparity between EVM and ArtWASM:
-
-\[
-  \frac{\text{EVM Performance}}{\text{ArtWASM Performance}} \approx \frac{1}{2026}
-\]
-
-From the Figure 5 (the second test), we can observe that when context switch time is 32, the execution time is about the same as a single EVM call. Which means if we modularize the dApp and migrate the logics from smart contract to Aspect, it is recommanded that the number of join-points used to be less than 32.
-
-The last test emphasizes that, given the pronounced performance chasm between EVM and ArtWASM, the convergence point of the trajectories is at 33 join-points. This implies that for a transaction execution window of 1ms, the upper bound for join-points stands at 33.
-
-The gleaned insights coalesce into several pivotal conclusions:
-
-\begin{enumerate}
-  \item Contextual switches between join-points induce a bit more overhead than an EVM call.
-  \item ArtWASM's computational prowess markedly overshadows that of the EVM.
-  \item It's economically prudent to nestle intricate logic within Aspect, relegating simpler logic to the smart contract.
-  \item Pruning the number of join-points harnessed yields cost efficiencies.
-\end{enumerate}
-
-Distilling the insights, we can encapsulate the dynamics in the equation:
-
-\[
-  \text{ExtraComputationCapacity} \equiv \frac{\text{AspectExecTime} - \text{ContextSwitchLatency} \times \text{JoinPointNumber}}{\text{EVMExecutionLatency} \times \frac{1}{2026}}
-\]
-
-It is recommanded to adjust the Aspect execution latency dynamically for the given blockchain platform. For example, in harmony with prevailing usage patterns, we postulate:
-
-\begin{enumerate}
-  \item Aspect aims to accommodate transaction execution latencies with a moderate 65\% uptick.
-  \item Of this latency, 45\% is earmarked for context switching.
-  \item The residual 20\% is allocated for execution.
-\end{enumerate}
-
-Leveraging the aforementioned postulates and empirical findings, and with Ethereum's average transaction latency as our baseline, our assumptions suggest that up to 15 join-points can be executed per transaction, heralding a monumental 40000\% surge in execution performance for the system. This is just a theoretical assumption specifically for Artela, and the actual number of join-points should be adjusted according to the actual blockchain platform.
