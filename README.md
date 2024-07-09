@@ -1,3 +1,7 @@
+first of all 
+you can join artela by this link .
+https://renaissance.artela.network/vision?R=0w1iBc
+
 # Aspect Whitepaper
 
 ## LaTeX Setup on Mac
